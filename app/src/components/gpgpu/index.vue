@@ -20,6 +20,7 @@ let ambient = [1.0, 1.0, 1.0, 1.0]
 let mouseFlag = false
 let mousePosition = [0.0, 0.0]
 let count = 0
+const devicePixelRatio = window.devicePixelRatio
 
 // 頂点情報を定義
 const pointNumber = 1000000
@@ -142,6 +143,7 @@ const drawParticle = () => {
   gl.uniform2fv(pointProgram.uniforms.resolution, positionResolution)
   gl.uniform1i(pointProgram.uniforms.texture, 0)
   gl.uniform1f(pointProgram.uniforms.pointScale, velocity)
+  gl.uniform1f(pointProgram.uniforms.devicePixelRatio, devicePixelRatio)
   gl.uniform4fv(pointProgram.uniforms.ambient, ambient)
   gl.drawArrays(gl.POINTS, 0, vertices.length)
 
