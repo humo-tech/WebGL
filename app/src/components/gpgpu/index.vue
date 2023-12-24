@@ -23,7 +23,7 @@ let count = 0
 const devicePixelRatio = window.devicePixelRatio
 
 // 頂点情報を定義
-const pointNumber = 1000000
+const pointNumber = 500000
 const POSITION_TEXTURE_WIDTH = Math.floor(Math.sqrt(pointNumber))
 const POSITION_TEXTURE_HEIGHT = POSITION_TEXTURE_WIDTH
 const positionResolution = [POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT]
