@@ -135,6 +135,72 @@ export default class WebGLUtil {
   }
 
   /**
+   * テクスチャ用の画像を読み込む関数
+   * @param {String} src
+   * @returns {Promise<Object>}
+   * @returns {Promise<Object><HTMLImageElement>} image 2の累乗にリサイズした画像
+   * @returns {Promise<Object><Number>} width 元画像の幅
+   * @returns {Promise<Object><Number>} height 元画像の高さ
+   */
+  static loadImage = (src) => {
+    return new Promise((resolve) => {
+      const img = new Image()
+      img.addEventListener('load', () => {
+        // 2の累乗にリサイズする
+        const canvas = document.createElement('canvas')
+        const size = 2 ** Math.round(Math.log2(Math.max(img.width, img.height)))
+        canvas.width = canvas.height = size
+        const ctx = canvas.getContext('2d')
+        ctx.drawImage(img, 0, 0, size, size)
+        resolve({ image: canvas, width: img.width, height: img.height })
+        // resolve(img);
+      })
+      img.src = src
+    })
+  }
+
+  /**
+   * テクスチャを生成する関数
+   * @param {WebGLRenderContext|WebGL2RenderingContext} gl
+   * @param {HTMLImageElement|HTMLCanvasElement} resource
+   * @param {Number} texUnit
+   * @returns {WebGLTexture}
+   */
+  static createTexture(gl, resource, texUnit = gl.TEXTURE0) {
+    const texture = gl.createTexture()
+    gl.activeTexture(texUnit)
+    gl.bindTexture(gl.TEXTURE_2D, texture)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, resource)
+
+    // mipmap
+    if (resource.nodeName !== 'VIDEO') {
+      gl.generateMipmap(gl.TEXTURE_2D)
+    }
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+
+    // bind解除
+    gl.bindTexture(gl.TEXTURE_2D, null)
+
+    return texture
+  }
+
+  /**
+   * テクスチャを更新する関数
+   * @param {WebGLRenderContext|WebGL2RenderingContext} gl
+   * @param {HTMLCanvasElement|HTMLVideoElement} resource
+   * @param {Number} texUnit
+   */
+  static updateTexture(gl, texture, resource, texUnit = gl.TEXTURE0) {
+    gl.activeTexture(texUnit)
+    gl.bindTexture(gl.TEXTURE_2D, texture)
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, resource)
+  }
+
+  /**
    *
    * @param {WebGLRenderingContext|WebGL2RenderingContext} gl
    * @param {Number} width
