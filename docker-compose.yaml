@@ -1,0 +1,12 @@
+services:
+    astro:
+        build:
+            context: .
+        tty: true
+        volumes: 
+            # dokerにマウントするディレクトリ
+            - ./:/develop
+            # docker内にだけ存在させしたいディレクトリを以下に記載
+            - /develop/app/node_modules
+        ports:
+            - 4321:4321
