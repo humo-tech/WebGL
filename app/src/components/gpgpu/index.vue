@@ -193,12 +193,24 @@ onMounted(() => {
 
 <template>
   <canvas ref="canvasElem"></canvas>
+  <div id="memo"><a href="https://wgld.org/d/webgl/w083.html" target="_blank" rel="noopener">参考サイト</a></div>
 </template>
 
 <style scoped>
 canvas {
   margin: 0 auto;
   display: block;
+}
+#memo {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #000c;
+  padding: 3px 10px 5px;
+}
+#memo a {
+  font-size: 12px;
+  color: #fff;
 }
 </style>
 
