@@ -130,7 +130,7 @@ export default class WebGLUtil {
    */
   static setAttribute(gl, vbo, location, stride) {
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo)
-    gl.enableVertexAttribArray(length)
+    gl.enableVertexAttribArray(location)
     gl.vertexAttribPointer(location, stride, gl.FLOAT, false, 0, 0)
   }
 
