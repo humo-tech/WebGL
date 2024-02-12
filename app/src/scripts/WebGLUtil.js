@@ -141,6 +141,7 @@ export default class WebGLUtil {
   /**
    * インスタンシング用の頂点情報を設定する関数
    * @param {WebGLRenderContext|WebGL2RenderingContext} gl
+   * @param {WebGLExtensionANGLE_instanced_arrays} ext
    * @param {WebGLBuffer} vbo
    * @param {Number} location
    * @param {Number} stride
