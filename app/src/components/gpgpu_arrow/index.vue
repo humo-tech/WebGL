@@ -221,7 +221,11 @@ onMounted(() => {
 
 <template>
   <canvas ref="canvasElem"></canvas>
-  <div id="memo"><a href="https://wgld.org/d/webgl/w083.html" target="_blank" rel="noopener">参考サイト</a></div>
+  <ul id="memo">
+    <li><a href="https://wgld.org/d/webgl/w083.html" target="_blank" rel="noopener">参考サイト1</a></li>
+    <li><a href="https://wgld.org/d/webgl/w075.html" target="_blank" rel="noopener">参考サイト2</a></li>
+    <li><a href="https://qiita.com/emadurandal/items/1812198d562bd1216c70" target="_blank" rel="noopener">参考サイト3</a></li>
+  </ul>
 </template>
 
 <style scoped>
@@ -235,6 +239,8 @@ canvas {
   right: 0;
   background-color: #000c;
   padding: 3px 10px 5px;
+  margin: 0;
+  list-style-type: none;
 }
 #memo a {
   font-size: 12px;
