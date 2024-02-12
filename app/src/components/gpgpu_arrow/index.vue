@@ -242,6 +242,9 @@ canvas {
   margin: 0;
   list-style-type: none;
 }
+#memo li {
+  user-select: none;
+}
 #memo a {
   font-size: 12px;
   color: #fff;
