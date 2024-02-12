@@ -159,7 +159,7 @@ const drawParticle = () => {
   pointProgram.use()
   gl.bindTexture(gl.TEXTURE_2D, frontPositionBuffer.texture)
 
-  WebGLUtil.setAttributeDivisorANGLE(gl, instancedExt, vertexVBO.buffer, pointProgram.attributes.index, vertexVBO.stride)
+  WebGLUtil.setAttributeInstancedArray(gl, instancedExt, vertexVBO.buffer, pointProgram.attributes.index, vertexVBO.stride)
   WebGLUtil.setAttribute(gl, arrowVBO.buffer, pointProgram.attributes.arrow, arrowVBO.stride, arrowIBO)
 
   gl.uniform2fv(pointProgram.uniforms.resolution, positionResolution)
@@ -169,11 +169,12 @@ const drawParticle = () => {
   gl.uniform4fv(pointProgram.uniforms.ambient, ambient)
   instancedExt.drawElementsInstancedANGLE(gl.TRIANGLES, arrowIndex.length, gl.UNSIGNED_SHORT, 0, vertices.length)
 
+  // instancing無効化
+  instancedExt.vertexAttribDivisorANGLE(pointProgram.attributes.index, 0)
+
   const tmpBuffer = backPositionBuffer
   backPositionBuffer = frontPositionBuffer
   frontPositionBuffer = tmpBuffer
-
-  instancedExt.vertexAttribDivisorANGLE(pointProgram.attributes.index, 0)
 }
 
 const render = () => {
