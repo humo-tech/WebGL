@@ -21,9 +21,10 @@ let mouseFlag = false
 let mousePosition = [0.0, 0.0]
 let count = 0
 const devicePixelRatio = window.devicePixelRatio
+let instancedExt
 
 // 頂点情報を定義
-const pointNumber = 500000
+const pointNumber = 5000
 const POSITION_TEXTURE_WIDTH = Math.floor(Math.sqrt(pointNumber))
 const POSITION_TEXTURE_HEIGHT = POSITION_TEXTURE_WIDTH
 const positionResolution = [POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT]
@@ -40,8 +41,19 @@ const planePosition = [
   [1.0, -1.0, 0.0],
 ].flat()
 
+const arrowPosition = [
+  [0.0, -0.03, 0.0],
+  [-0.1, 0.04, 0.0],
+  [0.0, 0.0, 0.0],
+  [0.1, 0.04, 0.0],
+]
+  .flat()
+  .map((p) => p / 5)
+
+const arrowIndex = [0, 1, 2, 0, 2, 3]
+
 let backPositionBuffer, frontPositionBuffer
-let vertexVBO, planeVBO
+let vertexVBO, planeVBO, arrowVBO, arrowIBO
 
 const initCanvas = () => {
   canvasElem.value.width = Math.min(window.innerWidth, window.innerHeight)
@@ -52,6 +64,12 @@ const initCanvas = () => {
   const ext = gl.getExtension('OES_texture_float') || gl.getExtension('OES_texture_half_float')
   if (ext == null) {
     alert('float texture not supported')
+    return
+  }
+
+  instancedExt = gl.getExtension('ANGLE_instanced_arrays')
+  if (!instancedExt) {
+    alert('instanced arrays not supportek')
     return
   }
 
@@ -70,6 +88,8 @@ const initProgram = () => {
 
   vertexVBO = WebGLUtil.createVBO(gl, vertices, 1)
   planeVBO = WebGLUtil.createVBO(gl, planePosition, 3)
+  arrowVBO = WebGLUtil.createVBO(gl, arrowPosition, 3)
+  arrowIBO = WebGLUtil.createIBO(gl, arrowIndex)
 
   backPositionBuffer = WebGLUtil.createFrameBuffer(gl, POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT, gl.FLOAT)
   frontPositionBuffer = WebGLUtil.createFrameBuffer(gl, POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT, gl.FLOAT)
@@ -139,17 +159,21 @@ const drawParticle = () => {
   pointProgram.use()
   gl.bindTexture(gl.TEXTURE_2D, frontPositionBuffer.texture)
 
-  WebGLUtil.setAttribute(gl, vertexVBO.buffer, pointProgram.attributes.index, vertexVBO.stride)
+  WebGLUtil.setAttributeArray(gl, instancedExt, vertexVBO.buffer, pointProgram.attributes.index, vertexVBO.stride)
+  WebGLUtil.setAttribute(gl, arrowVBO.buffer, pointProgram.attributes.arrow, arrowVBO.stride, arrowIBO)
+
   gl.uniform2fv(pointProgram.uniforms.resolution, positionResolution)
   gl.uniform1i(pointProgram.uniforms.texture, 0)
   gl.uniform1f(pointProgram.uniforms.pointScale, velocity)
   gl.uniform1f(pointProgram.uniforms.devicePixelRatio, devicePixelRatio)
   gl.uniform4fv(pointProgram.uniforms.ambient, ambient)
-  gl.drawArrays(gl.POINTS, 0, vertices.length)
+  instancedExt.drawElementsInstancedANGLE(gl.TRIANGLES, arrowIndex.length, gl.UNSIGNED_SHORT, 0, vertices.length)
 
   const tmpBuffer = backPositionBuffer
   backPositionBuffer = frontPositionBuffer
   frontPositionBuffer = tmpBuffer
+
+  instancedExt.vertexAttribDivisorANGLE(pointProgram.attributes.index, 0)
 }
 
 const render = () => {
@@ -159,7 +183,7 @@ const render = () => {
   gl.flush()
 
   if (mouseFlag) {
-    velocity = 1.0
+    velocity = 0.7
   } else {
     velocity *= 0.95
   }
