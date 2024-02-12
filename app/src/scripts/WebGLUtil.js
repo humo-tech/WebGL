@@ -147,7 +147,7 @@ export default class WebGLUtil {
    * @param {Number} stride
    * @param {Number} divisor
    */
-  static setAttributeDivisorANGLE(gl, ext, vbo, location, stride, divisor = 1) {
+  static setAttributeInstancedArray(gl, ext, vbo, location, stride, divisor = 1) {
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo)
     gl.enableVertexAttribArray(location)
     gl.vertexAttribPointer(location, stride, gl.FLOAT, false, 0, 0)
