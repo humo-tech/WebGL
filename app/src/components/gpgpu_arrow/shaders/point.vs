@@ -1,5 +1,5 @@
 // 頂点テクスチャフェッチを使って、テクスチャから座標情報を読み出す
-attribute float index; // pointリストのインデックス（座標ではない）
+attribute float index; // (instanced) pointリストのインデックス（座標ではない）
 attribute vec3 arrow; // 矢印の形状
 uniform vec2 resolution; // テクスチャの縦横サイズ
 uniform sampler2D texture; // pointインデックスに対応するテクスチャ（座標が入っている）
