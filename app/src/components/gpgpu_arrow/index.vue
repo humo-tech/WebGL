@@ -67,9 +67,10 @@ const initCanvas = () => {
     return
   }
 
+  // ジオメトリインスタンスの拡張機能チェック
   instancedExt = gl.getExtension('ANGLE_instanced_arrays')
   if (!instancedExt) {
-    alert('instanced arrays not supportek')
+    alert('instanced arrays not supported')
     return
   }
 
