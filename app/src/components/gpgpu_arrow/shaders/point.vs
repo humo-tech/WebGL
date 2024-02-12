@@ -2,7 +2,7 @@
 attribute float index; // pointリストのインデックス（座標ではない）
 attribute vec3 arrow; // 矢印の形状
 uniform vec2 resolution; // テクスチャの縦横サイズ
-uniform sampler2D texture; // ｐointインデックスに対応するテクスチャ（座標が入っている）
+uniform sampler2D texture; // pointインデックスに対応するテクスチャ（座標が入っている）
 uniform float devicePixelRatio;
 uniform float pointScale;
 
