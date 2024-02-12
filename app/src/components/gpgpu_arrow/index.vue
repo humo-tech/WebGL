@@ -159,7 +159,7 @@ const drawParticle = () => {
   pointProgram.use()
   gl.bindTexture(gl.TEXTURE_2D, frontPositionBuffer.texture)
 
-  WebGLUtil.setAttributeArray(gl, instancedExt, vertexVBO.buffer, pointProgram.attributes.index, vertexVBO.stride)
+  WebGLUtil.setAttributeDivisorANGLE(gl, instancedExt, vertexVBO.buffer, pointProgram.attributes.index, vertexVBO.stride)
   WebGLUtil.setAttribute(gl, arrowVBO.buffer, pointProgram.attributes.arrow, arrowVBO.stride, arrowIBO)
 
   gl.uniform2fv(pointProgram.uniforms.resolution, positionResolution)
