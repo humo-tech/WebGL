@@ -26,6 +26,6 @@ void main() {
     vec4 t = texture2D(texture, p);
 
     float angle = atan(t.z, -t.w);
-    float scale = (0.1 + pointScale) / devicePixelRatio;
+    float scale = (0.1 + pointScale) * devicePixelRatio;
     gl_Position = vec4((arrow.xy * scale * rotate(angle) + t.xy), 0.0, 1.0);
 }
