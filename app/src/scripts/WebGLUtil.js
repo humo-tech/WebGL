@@ -122,16 +122,36 @@ export default class WebGLUtil {
   }
 
   /**
-   *
+   * 頂点情報を設定する関数
    * @param {WebGLRenderContext|WebGL2RenderingContext} gl
    * @param {WebGLBuffer} vbo
    * @param {Number} location
    * @param {Number} stride
+   * @param {WebGLBuffer} ibo
    */
-  static setAttribute(gl, vbo, location, stride) {
+  static setAttribute(gl, vbo, location, stride, ibo) {
+    gl.bindBuffer(gl.ARRAY_BUFFER, vbo)
+    if (ibo) {
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo)
+    }
+    gl.enableVertexAttribArray(location)
+    gl.vertexAttribPointer(location, stride, gl.FLOAT, false, 0, 0)
+  }
+
+  /**
+   * インスタンシング用の頂点情報を設定する関数
+   * @param {WebGLRenderContext|WebGL2RenderingContext} gl
+   * @param {WebGLBuffer} vbo
+   * @param {Number} location
+   * @param {Number} stride
+   * @param {Number} divisor
+   */
+  static setAttributeArray(gl, ext, vbo, location, stride, divisor = 1) {
     gl.bindBuffer(gl.ARRAY_BUFFER, vbo)
     gl.enableVertexAttribArray(location)
     gl.vertexAttribPointer(location, stride, gl.FLOAT, false, 0, 0)
+
+    ext.vertexAttribDivisorANGLE(location, divisor)
   }
 
   /**
