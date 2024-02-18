@@ -40,7 +40,7 @@ const planePosition = [
   [1.0, -1.0, 0.0],
 ].flat()
 
-let backPositionBuffer, frontPositionBuffer
+let backPositionBuffer, middlePositionBuffer, frontPositionBuffer
 let vertexVBO, planeVBO
 
 const initCanvas = () => {
@@ -71,21 +71,23 @@ const initProgram = () => {
   vertexVBO = WebGLUtil.createVBO(gl, vertices, 1)
   planeVBO = WebGLUtil.createVBO(gl, planePosition, 3)
 
-  backPositionBuffer = WebGLUtil.createFrameBuffer(gl, POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT, gl.FLOAT)
-  frontPositionBuffer = WebGLUtil.createFrameBuffer(gl, POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT, gl.FLOAT)
+  backPositionBuffer = WebGLUtil.createFrameBuffer(gl, POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT)
+  middlePositionBuffer = WebGLUtil.createFrameBuffer(gl, POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT)
+  frontPositionBuffer = WebGLUtil.createFrameBuffer(gl, POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT)
 
-  setDefaultParticlePosition()
+  setDefaultParticlePosition(backPositionBuffer.frameBuffer)
+  setDefaultParticlePosition(middlePositionBuffer.frameBuffer)
 }
 
 /**
  * デフォルトの頂点情報を設定する関数
  */
-const setDefaultParticlePosition = () => {
+const setDefaultParticlePosition = (framebuffer) => {
   gl.disable(gl.BLEND)
   gl.blendFunc(gl.ONE, gl.ONE)
 
   // デフォルトの頂点情報を書き込む
-  gl.bindFramebuffer(gl.FRAMEBUFFER, backPositionBuffer.frameBuffer)
+  gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer)
   gl.viewport(0, 0, POSITION_TEXTURE_WIDTH, POSITION_TEXTURE_HEIGHT)
   gl.clearColor(0.0, 0.0, 0.0, 0.0)
   gl.clear(gl.COLOR_BUFFER_BIT)
@@ -107,12 +109,16 @@ const updateParticlePosition = () => {
 
   velocityProgram.use()
   // テスクチャとしてバックバッファをバインド
+  gl.activeTexture(gl.TEXTURE0)
   gl.bindTexture(gl.TEXTURE_2D, backPositionBuffer.texture)
+  gl.activeTexture(gl.TEXTURE1)
+  gl.bindTexture(gl.TEXTURE_2D, middlePositionBuffer.texture)
 
   // テクスチャへ頂点情報をレンダリング
   WebGLUtil.setAttribute(gl, planeVBO.buffer, velocityProgram.attributes.position, planeVBO.stride)
   gl.uniform2fv(velocityProgram.uniforms.resolution, positionResolution)
   gl.uniform1i(velocityProgram.uniforms.texture, 0)
+  gl.uniform1i(velocityProgram.uniforms.texture_pre, 1)
   gl.uniform2fv(velocityProgram.uniforms.mouse, mousePosition)
   gl.uniform1i(velocityProgram.uniforms.mouseFlag, mouseFlag)
   gl.uniform1f(velocityProgram.uniforms.velocity, velocity)
@@ -148,7 +154,8 @@ const drawParticle = () => {
   gl.drawArrays(gl.POINTS, 0, vertices.length)
 
   const tmpBuffer = backPositionBuffer
-  backPositionBuffer = frontPositionBuffer
+  backPositionBuffer = middlePositionBuffer
+  middlePositionBuffer = frontPositionBuffer
   frontPositionBuffer = tmpBuffer
 }
 
