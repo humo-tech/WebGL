@@ -7,13 +7,14 @@ import velocityVS from './shaders/velocity.vs'
 import velocityFS from './shaders/velocity.fs'
 import pointVS from './shaders/point.vs'
 import pointFS from './shaders/point.fs'
-import { hsva } from '@/scripts/util.js'
+import { hsva, initStats } from '@/scripts/util.js'
 
 const canvasElem = ref()
 let gl = null
 let defaultProgram = null
 let velocityProgram = null
 let pointProgram = null
+let stats
 
 let velocity = 0.0
 let ambient = [1.0, 1.0, 1.0, 1.0]
@@ -160,6 +161,7 @@ const drawParticle = () => {
 }
 
 const render = () => {
+  stats.begin()
   updateParticlePosition()
   drawParticle()
 
@@ -170,6 +172,7 @@ const render = () => {
   } else {
     velocity *= 0.95
   }
+  stats.end()
 
   requestAnimationFrame(render)
 }
@@ -194,6 +197,7 @@ const mouseMove = (event) => {
 }
 
 onMounted(() => {
+  stats = initStats()
   initCanvas()
   initProgram()
   render()
@@ -220,6 +224,12 @@ canvas {
 #memo a {
   font-size: 12px;
   color: #fff;
+}
+.stats {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 3;
 }
 </style>
 
