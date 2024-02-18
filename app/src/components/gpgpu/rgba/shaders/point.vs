@@ -21,5 +21,5 @@ void main() {
     vec2 t = rgba2float(t_color);
 
     gl_Position = vec4(t, 0.0, 1.0);
-    gl_PointSize = (0.1 + pointScale) * devicePixelRatio;
+    gl_PointSize = (0.1 + pointScale) / devicePixelRatio;
 }
