@@ -1,3 +1,5 @@
+import Stats from 'stats.js'
+
 export const hsva = (h, s, v, a) => {
   if (s > 1 || v > 1 || a > 1) {
     return
@@ -18,4 +20,15 @@ export const hsva = (h, s, v, a) => {
     color.push(r[i], g[i], b[i], a)
   }
   return color
+}
+
+export const initStats = () => {
+  const stats = new Stats()
+  stats.showPanel(0)
+  document.body.appendChild(stats.dom)
+  stats.domElement.style.position = 'absolute'
+  stats.domElement.style.top = '0px'
+  stats.domElement.style.left = '0px'
+
+  return stats
 }
