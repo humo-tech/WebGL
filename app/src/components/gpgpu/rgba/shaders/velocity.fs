@@ -17,11 +17,11 @@ void main () {
     vec4 t_color = texture2D(texture, p); // テクスチャから取り出した座標データ
     vec2 t = rgba2float(t_color);
 
-    vec2 diff = vec2(0.0);
-    if(mouseFlag) {
-        vec4 u_color = texture2D(texture_pre, p); // テクスチャから取り出した座標データ
-        vec2 u = rgba2float(u_color); // 一つ前の座標
-        diff = normalize(u - t); // 差分ベクトル 向きのみ。単位化
+    vec4 u_color = texture2D(texture_pre, p); // テクスチャから取り出した座標データ
+    vec2 u = rgba2float(u_color); // 一つ前の座標
+    vec2 diff = normalize(u - t); // 差分ベクトル 向きのみ。単位化
+    if(!mouseFlag) {
+        diff *= 5.00;
     }
 
     vec2 v = normalize(mouse - t.xy) * 0.2; // マウス座標と各頂点とのベクトル（長さは 0.2 固定）// マウス座標に寄っていくスピード
