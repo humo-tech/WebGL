@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import control from './control.vue'
 import WebGLUtil from '@/scripts/WebGLUtil.js'
 import defaultVS from './shaders/default.vs'
 import defaultFS from './shaders/default.fs'
@@ -148,6 +149,7 @@ onMounted(() => {
 
 <template>
   <canvas ref="canvasElem"></canvas>
+  <control :is-float="isFloat"></control>
 </template>
 
 <style scoped>
@@ -160,5 +162,6 @@ canvas {
 <style>
 body {
   margin: 0;
+  background-color: #112;
 }
 </style>
